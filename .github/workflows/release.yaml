@@ -10,13 +10,13 @@ on:
 #      - main
 
 jobs:
-strategy:
-  matrix:
-    os: [ubuntu-latest]
-    include:
-      - os: ubuntu-latest
-        platform: linux
-        extension: appimage
+  strategy:
+    matrix:
+      os: [ubuntu-latest]
+      include:
+        - os: ubuntu-latest
+          platform: linux
+          extension: appimage
   release:
     steps:
       - name: Check out Git repository

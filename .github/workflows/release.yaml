@@ -10,14 +10,15 @@ on:
 #      - main
 
 jobs:
-  strategy:
-    matrix:
-      os: [ubuntu-latest]
-      include:
-        - os: ubuntu-latest
-          platform: linux
-          extension: appimage
   release:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        include:
+          - os: ubuntu-latest
+            platform: linux
+            extension: appimage
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4

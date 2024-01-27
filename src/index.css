@@ -1,0 +1,21 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body.barcode-scanner-active {
+  visibility: hidden;
+  background: transparent;
+  background-color: transparent;
+}
+
+.barcode-scanner-modal {
+  visibility: visible;
+}
+.barcode-scanner-modal .background {
+  display: none;
+}
+.barcode-scanner-modal .appbar {
+  background-color: #f8f8f8;
+}

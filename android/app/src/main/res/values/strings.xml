@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">minotaur 2</string>
+    <string name="title_activity_main">minotaur 2</string>
+    <string name="package_name">ml.minotaur.wallet2</string>
+    <string name="custom_url_scheme">ml.minotaur.wallet2</string>
+</resources>

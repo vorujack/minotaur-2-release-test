@@ -17,7 +17,7 @@ jobs:
         include:
           - os: ubuntu-latest
             platform: linux
-            extension: appimage
+            extension: AppImage
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out Git repository

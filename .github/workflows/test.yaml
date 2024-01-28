@@ -1,0 +1,27 @@
+name: Build for All platforms
+on:
+  push:
+    branches:
+      - main
+env:
+  CI: false
+
+jobs:
+
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Android build environment
+        uses: android-actions/setup-android@v3
+
+      - name: List build tools
+        run: ls $androidHome/build-tools

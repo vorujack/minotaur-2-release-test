@@ -25,7 +25,7 @@ jobs:
           java-version: '17'
 
       - name: Setup Android build environment
-        uses: android-actions/setup-android@v2.0.2
+        uses: android-actions/setup-android@v3
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./android/gradlew
@@ -50,6 +50,9 @@ jobs:
         working-directory: android
         run: ./gradlew clean app:assembleRelease
 
+      - name: List build tools
+        run: ls $androidHome/build-tools
+        
       - uses: r0adkll/sign-android-release@v1
         name: Sign app APK
         # ID used to access action output

@@ -3,15 +3,14 @@ import CircularProgress from '@mui/material/CircularProgress';
 import React, { useContext, useEffect } from 'react';
 import { TxDataContext } from '@/components/sign/context/TxDataContext';
 import TxGenerateContext from '@/components/sign/context/TxGenerateContext';
-import TxSignContext, {
-  StatusEnum,
-} from '@/components/sign/context/TxSignContext';
+import TxSignContext from '@/components/sign/context/TxSignContext';
 import StateMessage from '@/components/state-message/StateMessage';
 import { StateWallet } from '@/store/reducer/wallet';
 import SigningSwitch from './SigningSwitch';
 import TxSignValues from './TxSignValues';
 import DisplayQRCode from '@/components/display-qrcode/DisplayQRCode';
 import { QrCodeTypeEnum } from '@/types/qrcode';
+import TxSignStatusDisplay from '@/components/tx-signing-status/TxSignStatusDisplay';
 
 interface SignTxPropsType {
   wallet: StateWallet;
@@ -27,32 +26,7 @@ const SignTx = (props: SignTxPropsType) => {
     generatorContext.setReady(true);
   });
   if (txDataContext.tx) {
-    if (
-      txSignContext.status === StatusEnum.SENDING ||
-      txSignContext.status === StatusEnum.SIGNING
-    ) {
-      return (
-        <Box
-          sx={{
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-          }}
-        >
-          <StateMessage
-            title={
-              txSignContext.status === StatusEnum.SIGNING
-                ? 'Signing Transaction'
-                : 'Sending Transaction to Blockchain'
-            }
-            description="Please wait"
-            icon={<CircularProgress />}
-          />
-        </Box>
-      );
-    }
-    return (
+    <TxSignStatusDisplay status={txSignContext.status}>
       <React.Fragment>
         <TxSignValues
           tx={txDataContext.tx}
@@ -76,7 +50,7 @@ const SignTx = (props: SignTxPropsType) => {
           />
         )}
       </React.Fragment>
-    );
+    </TxSignStatusDisplay>;
   }
   return props.hideLoading === true ? undefined : (
     <Box

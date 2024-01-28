@@ -9,6 +9,7 @@ import { SelectableWalletContext } from '../sign/context/SelectableWalletContext
 import useChunks from '@/hooks/useChunks';
 import MorePages from './qrcode-types/more-pages/MorePages';
 import Loading from '../state-message/Loading';
+import TxSubmitContextHandler from '../sign/context/TxSubmitContextHandler';
 
 interface QrCodeDetectedTypePropsType {
   scanned: string;
@@ -94,7 +95,9 @@ const QrCodeDetectedType = (props: QrCodeDetectedTypePropsType) => {
               wallet={usedWallet}
               close={props.close}
             >
-              {selectedType.render(chunks.data, props.close)}
+              <TxSubmitContextHandler wallet={usedWallet} close={props.close}>
+                {selectedType.render(chunks.data, props.close)}
+              </TxSubmitContextHandler>
             </TxSignContextHandler>
           </SelectableWalletContext.Provider>
         ) : null}

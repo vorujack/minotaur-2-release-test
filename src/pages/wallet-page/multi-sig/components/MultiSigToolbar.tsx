@@ -1,7 +1,7 @@
 import { ContentPasteOutlined, ShareOutlined } from '@mui/icons-material';
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 import { Button, Grid } from '@mui/material';
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { validatePassword } from '@/action/wallet';
 import { MultiSigContext } from '@/components/sign/context/MultiSigContext';
 import { MultiSigDataContext } from '@/components/sign/context/MultiSigDataContext';
@@ -11,18 +11,15 @@ import { TxDataContext } from '@/components/sign/context/TxDataContext';
 import { readClipBoard } from '@/utils/clipboard';
 import * as wasm from 'ergo-lib-wasm-browser';
 import { updateMultiSigRow } from '@/action/multi-sig/store';
-import getChain from '@/utils/networks';
-import { StatusEnum } from '@/components/sign/context/TxSignContext';
-import SuccessSend from '@/components/sign/success-send/SuccessSend';
 import { QrCodeContext } from '@/components/qr-code-scanner/QrCodeContext';
+import TxSubmitContext from '@/components/sign/context/TxSubmitContext';
 
 const MultiSigToolbar = () => {
   const context = useContext(MultiSigContext);
   const data = useContext(TxDataContext);
   const multiSigData = useContext(MultiSigDataContext);
   const scanContext = useContext(QrCodeContext);
-  const [status, setStatus] = useState<StatusEnum>(StatusEnum.WAITING);
-  const [submitError, setSubmitError] = useState('');
+  const submitContext = useContext(TxSubmitContext);
 
   const getLabel = () => {
     switch (multiSigData.state) {
@@ -120,35 +117,17 @@ const MultiSigToolbar = () => {
     );
   };
 
+  const publishAction = async () => {
+    if (context.data.partial) {
+      submitContext.submit(context.data.partial);
+    } else {
+      console.error('Unknown error occurred');
+    }
+  };
+
   const pasteAction = async () => {
     const clipBoardContent = await readClipBoard();
     processNewData(clipBoardContent);
-  };
-  const close = () => {
-    setStatus(StatusEnum.WAITING);
-  };
-
-  const publishAction = async () => {
-    if (context.data.partial) {
-      return getChain(data.wallet.networkType)
-        .getNetwork()
-        .sendTx(context.data.partial)
-        .then(() => {
-          setStatus(StatusEnum.SENT);
-        })
-        .catch((err) => {
-          if (err.response) {
-            setSubmitError(err.response.data.reason);
-          } else {
-            setSubmitError('unknown error occurred. check application logs');
-            console.log(err);
-          }
-          setStatus(StatusEnum.ERROR);
-        });
-    } else {
-      setSubmitError('unknown error occurred. check application logs');
-      setStatus(StatusEnum.ERROR);
-    }
   };
 
   const act = async () => {
@@ -227,22 +206,6 @@ const MultiSigToolbar = () => {
           </React.Fragment>
         )}
       </Grid>
-      <SuccessSend
-        networkType={data.wallet.networkType}
-        open={status === StatusEnum.SENT || status === StatusEnum.ERROR}
-        id={
-          status === StatusEnum.SENT && context.data.partial
-            ? context.data.partial.id().to_str()
-            : undefined
-        }
-        isSuccess={status === StatusEnum.SENT}
-        msg={
-          status === StatusEnum.SENT
-            ? 'It can take about 2 minutes to mine your transaction. Also syncing your wallet may be slow.'
-            : submitError
-        }
-        handleClose={close}
-      />
     </React.Fragment>
   );
 };

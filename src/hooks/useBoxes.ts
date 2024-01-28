@@ -27,7 +27,7 @@ const useBoxes = (
   };
   const boxIds = getBoxIds();
   useEffect(() => {
-    if (!loading) {
+    if (!loading && tx) {
       const newBoxIds = JSON.stringify(boxIds.sort());
       if (loadedBoxIds !== newBoxIds) {
         setLoading(true);
@@ -69,7 +69,7 @@ const useBoxes = (
         });
       }
     }
-  }, [loading, boxIds, loadedBoxIds, wallet, wallets]);
+  }, [loading, boxIds, loadedBoxIds, wallet, wallets, tx]);
   return {
     boxes,
     loading,

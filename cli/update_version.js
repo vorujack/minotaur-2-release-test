@@ -1,8 +1,10 @@
-import fs from 'fs'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
+import fs from 'fs'
+import process from 'process';
+import { fileURLToPath } from 'url';
 
 async function main() {
-  if (process.argv.length < 2) {
+  if (process.argv.length < 3) {
     throw Error('No version specified');
   }
   for (let file_path of ['package.json', 'electron/package.json']) {
@@ -14,9 +16,12 @@ async function main() {
   }
 }
 
-main()
-  .then(() => process.exit(0))
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  });
+if (process.argv[1] === fileURLToPath(import.meta.url))  {
+  main()
+    .then(() => process.exit(0))
+    .catch((e) => {
+      console.error(e);
+      process.exit(1);
+    });
+}
+console.log(process.argv, fileURLToPath(import.meta.url))

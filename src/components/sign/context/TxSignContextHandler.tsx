@@ -8,12 +8,12 @@ import {
 } from '../../../action/tx';
 import { WalletType } from '../../../db/entities/Wallet';
 import { StateWallet } from '../../../store/reducer/wallet';
-import getChain from '../../../utils/networks';
-import SuccessSend from '../success-send/SuccessSend';
 import TxDataContextHandler from './TxDataContextHandler';
 import TxSignContext, { StatusEnum } from './TxSignContext';
 import { RouteMap, getRoute } from '../../../router/routerMap';
 import { QrCodeContext } from '@/components/qr-code-scanner/QrCodeContext';
+import TxSubmitContextHandler from './TxSubmitContextHandler';
+import TxSubmitContext from './TxSubmitContext';
 
 interface TxSignContextHandlerPropsType {
   wallet: StateWallet;
@@ -32,9 +32,9 @@ const TxSignContextHandler = (props: TxSignContextHandlerPropsType) => {
   const [dataBoxes, setDataBoxes] = useState<Array<wasm.ErgoBox>>([]);
   const [password, setPassword] = useState('');
   const [status, setStatus] = useState<StatusEnum>(StatusEnum.WAITING);
-  const [submitError, setSubmitError] = useState('');
   const [signedStr, setSignedStr] = useState('');
   const qrCodeContext = useContext(QrCodeContext);
+  const submitContext = useContext(TxSubmitContext);
   const setTransactionDetail = (
     tx: wasm.UnsignedTransaction | undefined,
     boxes: Array<wasm.ErgoBox>,
@@ -67,26 +67,6 @@ const TxSignContextHandler = (props: TxSignContextHandlerPropsType) => {
     }
   };
 
-  const submitTx = (signed: wasm.Transaction) => {
-    setStatus(StatusEnum.SENDING);
-    return getChain(props.wallet.networkType)
-      .getNetwork()
-      .sendTx(signed)
-      .then(() => {
-        setStatus(StatusEnum.SENT);
-        setPassword('');
-      })
-      .catch((err) => {
-        if (err.response) {
-          setSubmitError(err.response.data.reason);
-        } else {
-          setSubmitError('unknown error occurred. check application logs');
-          console.log(err);
-        }
-        setStatus(StatusEnum.ERROR);
-      });
-  };
-
   const handleNormalReducedTx = () => {
     if (reduced) {
       return signNormalWalletReducedTx(props.wallet, password, reduced).then(
@@ -100,7 +80,7 @@ const TxSignContextHandler = (props: TxSignContextHandlerPropsType) => {
               }),
             );
           } else {
-            submitTx(signed);
+            submitContext.submit(signed);
           }
         },
       );
@@ -116,7 +96,7 @@ const TxSignContextHandler = (props: TxSignContextHandlerPropsType) => {
         tx,
         boxes,
         dataBoxes,
-      ).then(submitTx);
+      ).then(submitContext.submit);
     }
   };
 
@@ -175,20 +155,15 @@ const TxSignContextHandler = (props: TxSignContextHandlerPropsType) => {
         reduced={reduced}
         tx={tx}
       >
-        {props.children}
+        <TxSubmitContextHandler
+          wallet={props.wallet}
+          status={status}
+          setStatus={setStatus}
+          close={close}
+        >
+          {props.children}
+        </TxSubmitContextHandler>
       </TxDataContextHandler>
-      <SuccessSend
-        networkType={props.wallet.networkType}
-        open={status === StatusEnum.SENT || status === StatusEnum.ERROR}
-        id={status === StatusEnum.SENT && tx ? tx.id().to_str() : undefined}
-        isSuccess={status === StatusEnum.SENT}
-        msg={
-          status === StatusEnum.SENT
-            ? 'It can take about 2 minutes to mine your transaction. Also syncing your wallet may be slow.'
-            : submitError
-        }
-        handleClose={close}
-      />
     </TxSignContext.Provider>
   );
 };

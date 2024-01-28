@@ -44,6 +44,9 @@ jobs:
 
       - name: Build Minotaur JS app and update capacitor
         run: CI=false npm run sync
+      
+      - name: Remove icns from assets
+        run: rm electron/assets/appIcon.icns
 
       - name: Build Electron
         working-directory: ./electron

@@ -3,11 +3,7 @@ on:
   push:
     tags:
       - 'v*.*.*'
-#    branches:
-#      - main
-#  pull_request:
-#    branches:
-#      - main
+
 env:
   CI: false
 
@@ -26,7 +22,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '21'
 
       - name: Setup Android build environment
         uses: android-actions/setup-android@v2.0.2

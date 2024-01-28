@@ -24,4 +24,4 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: List build tools
-        run: ls $androidHome/build-tools
+        run: ls $ANDROID_HOME/build-tools

@@ -3,9 +3,6 @@ description: 'Build and Sign Android apk'
 runs:
   using: "composite"
   steps:
-    - name: Check out Git repository
-      uses: actions/checkout@v4
-
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:

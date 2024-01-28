@@ -16,6 +16,9 @@ jobs:
   android:
     runs-on: ubuntu-latest
     steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -88,6 +91,9 @@ jobs:
             extension: msi
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
       - name: Build Wallet
         uses: ./.github/actions/build
 

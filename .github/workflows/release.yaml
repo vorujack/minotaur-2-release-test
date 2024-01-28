@@ -8,12 +8,13 @@ on:
 #  pull_request:
 #    branches:
 #      - main
-
+env:
+  CI: false
 jobs:
   release:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest, ubuntu-latest]
         include:
           - os: ubuntu-latest
             platform: linux
@@ -24,6 +25,9 @@ jobs:
           - os: windows-latest
             platform: Windows
             extension: msi
+          - os: ubuntu-latest
+            platform: android
+            extension: apk
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out Git repository
@@ -39,6 +43,17 @@ jobs:
         with:
           python-version: "3.9"
 
+      - name: Setup Java
+        if: matrix.platform == 'android'
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      - name: Setup Android build environment
+        if: matrix.platform == 'android'
+        uses: android-actions/setup-android@v3.2.0
+
       - name: Extract version from tag
         uses: damienaicheh/extract-version-from-tag-action@v1.1.0
 
@@ -49,17 +64,23 @@ jobs:
         run: node cli/update_version.js '${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}'
 
       - name: Build Minotaur JS app and update capacitor
-        run: CI=false npm run sync
+        run: npm run sync
       
       - name: Remove icns from assets
         if: matrix.os != 'macos-latest'
         run: rm electron/assets/appIcon.icns
 
+      - name: Build Android
+        if: matrix.platform == 'android'
+        uses: ./.github/actions/build-android
+
       - name: Build Electron
+        if: matrix.platform != 'android'
         working-directory: ./electron
-        run: CI=false; npm i; npm run build; npm run electron:pack; npm run electron:make
+        run: npm i; npm run build; npm run electron:pack; npm run electron:make
 
       - name: Upload Executable File to release
+        if: matrix.platform != 'android'
         uses: softprops/action-gh-release@v1
         with:
           files: electron/dist/minotaur-*.${{ matrix.extension }}

@@ -43,17 +43,6 @@ jobs:
         with:
           python-version: "3.9"
 
-      - name: Setup Java
-        if: matrix.platform == 'android'
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: '11'
-
-      - name: Setup Android build environment
-        if: matrix.platform == 'android'
-        uses: android-actions/setup-android@v3.2.0
-
       - name: Extract version from tag
         uses: damienaicheh/extract-version-from-tag-action@v1.1.0
 

@@ -3,6 +3,15 @@ description: 'Build and Sign Android apk'
 runs:
   using: "composite"
   steps:
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'zulu'
+        java-version: '11'
+
+    - name: Setup Android build environment
+      uses: android-actions/setup-android@v3.2.0
+
     - name: Grant execute permission for gradlew
       run: chmod +x ./android/gradlew
 

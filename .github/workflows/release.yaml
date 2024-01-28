@@ -19,6 +19,9 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v4
 
+      - name: Build Wallet
+        uses: ./.github/actions/build
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -27,9 +30,6 @@ jobs:
 
       - name: Setup Android build environment
         uses: android-actions/setup-android@v3.2.0
-
-      - name: Build Wallet
-        uses: ./.github/actions/build
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./android/gradlew
@@ -88,7 +88,7 @@ jobs:
             extension: dmg
           - os: windows-latest
             platform: Windows
-            extension: msi
+            extension: exe
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out Git repository
@@ -107,7 +107,7 @@ jobs:
         run: npm i; npm run build; npm run electron:pack; npm run electron:make
       
       - name: Rename Executable File
-        run: mv electron/dist/minotaur-*.${{ matrix.extension }} ./minotaur2-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.${{ matrix.extension }}
+        run: ls electron/dist; mv electron/dist/minotaur-*.${{ matrix.extension }} ./minotaur2-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.${{ matrix.extension }}
 
       - name: Upload Executable File to release
         uses: softprops/action-gh-release@v1

@@ -58,7 +58,7 @@ jobs:
         # ID used to access action output
         id: sign_app
         env:
-          - BUILD_TOOLS_VERSION=34.0.0
+          BUILD_TOOLS_VERSION: 34.0.0
         with:
           releaseDirectory: android/app/build/outputs/apk/release
           signingKeyBase64: ${{ secrets.SIGNING_KEYSTORE }}

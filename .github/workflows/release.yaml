@@ -50,9 +50,6 @@ jobs:
         working-directory: android
         run: ./gradlew clean app:assembleRelease
 
-      - name: List build tools
-        run: ls $androidHome/build-tools
-
       - uses: r0adkll/sign-android-release@v1
         name: Sign app APK
         # ID used to access action output

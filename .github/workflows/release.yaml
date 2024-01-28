@@ -12,36 +12,9 @@ env:
   CI: false
 
 jobs:
-  build: 
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.*
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.9"
-
-      - name: Extract version from tag
-        uses: damienaicheh/extract-version-from-tag-action@v1.1.0
-
-      - name: Install app dependencies
-        run: npm install
-
-      - name: Update package.json files
-        run: node cli/update_version.js '${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}'
-
-      - name: Build Minotaur JS app and update capacitor
-        run: npm run sync
 
   android:
     runs-on: ubuntu-latest
-    needs: build
     steps:
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -51,6 +24,9 @@ jobs:
 
       - name: Setup Android build environment
         uses: android-actions/setup-android@v3.2.0
+
+      - name: Build Wallet
+        uses: ./.github/actions/build
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./android/gradlew
@@ -111,8 +87,10 @@ jobs:
             platform: Windows
             extension: msi
     runs-on: ${{ matrix.os }}
-    needs: build
     steps:
+      - name: Build Wallet
+        uses: ./.github/actions/build
+
       - name: Remove icns from assets
         if: matrix.os != 'macos-latest'
         run: rm electron/assets/appIcon.icns

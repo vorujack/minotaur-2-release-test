@@ -29,7 +29,7 @@ jobs:
           java-version: '11'
 
       - name: Setup Android build environment
-        uses: android-actions/setup-android@v3.2.0
+        uses: android-actions/setup-android@v2.0.2
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./android/gradlew
@@ -107,7 +107,12 @@ jobs:
         run: npm i; npm run build; npm run electron:pack; npm run electron:make
       
       - name: Rename Executable File
-        run: ls electron/dist; mv electron/dist/minotaur-*.${{ matrix.extension }} ./minotaur2-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.${{ matrix.extension }}
+        if: matrix.os != 'windows-latest'
+        run: mv electron/dist/minotaur-*.${{ matrix.extension }} ./minotaur2-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.${{ matrix.extension }}
+
+      - name: Rename Executable File
+        if: matrix.os == 'windows-latest'
+        run: mv electron/dist/minotaur-*.${{ matrix.extension }} ./minotaur2-setup-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.${{ matrix.extension }}
 
       - name: Upload Executable File to release
         uses: softprops/action-gh-release@v1

@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '21'
+          java-version: '17'
 
       - name: Setup Android build environment
         uses: android-actions/setup-android@v2.0.2
@@ -35,7 +35,7 @@ jobs:
         with:
           android-manifest-path: './android/app/src/main/AndroidManifest.xml'
           version-code: ${{ env.NUMBER_OF_COMMITS }}
-          version-name: '${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}'
+          version-name: '${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}${{ env.PRE_RELEASE }}'
           print-file: true
 
       - name: Update gradle version for Android
@@ -43,7 +43,7 @@ jobs:
         with:
           build-gradle-path: './android/app/build.gradle'
           version-code: ${{ env.NUMBER_OF_COMMITS }}
-          version-name: '${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}'
+          version-name: '${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}${{ env.PRE_RELEASE }}'
           print-file: true
 
       - name: Build app bundle
@@ -62,7 +62,7 @@ jobs:
           keyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
 
       - name: move apk to root directory
-        run: mv ${{steps.sign_app.outputs.signedReleaseFile}} minotaur-wallet-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.apk
+        run: mv ${{steps.sign_app.outputs.signedReleaseFile}} minotaur-wallet-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}${{ env.PRE_RELEASE }}.apk
 
       - name: Upload Apk File to release
         uses: softprops/action-gh-release@v1
@@ -104,11 +104,11 @@ jobs:
       
       - name: Rename Executable File
         if: matrix.os != 'windows-latest'
-        run: mv electron/dist/minotaur-*.${{ matrix.extension }} ./minotaur2-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.${{ matrix.extension }}
+        run: mv electron/dist/minotaur-*.${{ matrix.extension }} ./minotaur2-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}${{ env.PRE_RELEASE }}.${{ matrix.extension }}
 
       - name: Rename Executable File
         if: matrix.os == 'windows-latest'
-        run: mv electron/dist/minotaur-*.${{ matrix.extension }} ./minotaur2-setup-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.${{ matrix.extension }}
+        run: mv electron/dist/minotaur-*.${{ matrix.extension }} ./minotaur2-setup-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}${{ env.PRE_RELEASE }}.${{ matrix.extension }}
 
       - name: Upload Executable File to release
         uses: softprops/action-gh-release@v1

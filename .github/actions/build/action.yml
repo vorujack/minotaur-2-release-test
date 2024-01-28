@@ -22,7 +22,7 @@ runs:
 
     - name: Update package.json files
       shell: bash
-      run: node cli/update_version.js '${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}'
+      run: node cli/update_version.js '${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}${{ env.PRE_RELEASE }}'
 
     - name: Build Minotaur JS app and update capacitor
       shell: bash

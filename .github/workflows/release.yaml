@@ -13,7 +13,7 @@ jobs:
   release:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         include:
           - os: ubuntu-latest
             platform: linux
@@ -21,6 +21,9 @@ jobs:
           - os: macos-latest
             platform: macOS
             extension: dmg
+          - os: windows-latest
+            platform: Windows
+            extension: msi
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out Git repository

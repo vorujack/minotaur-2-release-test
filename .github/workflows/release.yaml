@@ -10,32 +10,34 @@ on:
 #      - main
 env:
   CI: false
+
 jobs:
   build: 
-    - name: Check out Git repository
-      uses: actions/checkout@v4
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20.*
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.*
 
-    - name: Setup Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.9"
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
 
-    - name: Extract version from tag
-      uses: damienaicheh/extract-version-from-tag-action@v1.1.0
+      - name: Extract version from tag
+        uses: damienaicheh/extract-version-from-tag-action@v1.1.0
 
-    - name: Install app dependencies
-      run: npm install
+      - name: Install app dependencies
+        run: npm install
 
-    - name: Update package.json files
-      run: node cli/update_version.js '${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}'
+      - name: Update package.json files
+        run: node cli/update_version.js '${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}'
 
-    - name: Build Minotaur JS app and update capacitor
-      run: npm run sync
+      - name: Build Minotaur JS app and update capacitor
+        run: npm run sync
 
   android:
     runs-on: ubuntu-latest

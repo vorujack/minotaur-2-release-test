@@ -39,9 +39,12 @@
     "patch-package": "^8.0.0"
   },
   "devDependencies": {
-    "electron": "^26.2.2",
-    "electron-builder": "~23.6.0",
-    "electron-rebuild": "^3.2.9",
+    "electron": "^28.1.4",
+    "electron-builder": "~24.9.1",
+    "@types/better-sqlite3": "^7.6.8",
+    "@types/crypto-js": "^4.2.2",
+    "@types/electron-json-storage": "^4.5.4",
+    "@electron/rebuild": "^3.6.0",
     "typescript": "^5.3.3"
   },
   "keywords": [

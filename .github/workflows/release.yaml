@@ -63,10 +63,14 @@ jobs:
           keyStorePassword: ${{ secrets.SIGNING_STORE_PASSWORD }}
           keyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
 
+
+      - name: move apk to root directory
+        run: mv ${{steps.sign_app.outputs.signedReleaseFile}} minotaur-2-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}${{ env.PRE_RELEASE }}.apk
+
       - name: Upload Apk File to release
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{steps.sign_app.outputs.signedReleaseFile}}
+          files: minotaur-2-*.apk
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 

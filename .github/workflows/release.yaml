@@ -63,13 +63,10 @@ jobs:
           keyStorePassword: ${{ secrets.SIGNING_STORE_PASSWORD }}
           keyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
 
-      - name: move apk to root directory
-        run: mv ${{steps.sign_app.outputs.signedReleaseFile}} minotaur-wallet-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}${{ env.PRE_RELEASE }}.apk
-
       - name: Upload Apk File to release
         uses: softprops/action-gh-release@v1
         with:
-          files: minotaur-wallet-*.apk
+          files: ${{steps.sign_app.outputs.signedReleaseFile}}
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
@@ -104,18 +101,10 @@ jobs:
         working-directory: ./electron
         run: npm i; npm run build; npm run electron:pack; npm run electron:make
       
-      - name: Rename Executable File
-        if: matrix.os != 'windows-latest'
-        run: mv electron/dist/minotaur-*.${{ matrix.extension }} ./minotaur2-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}${{ env.PRE_RELEASE }}.${{ matrix.extension }}
-
-      - name: Rename Executable File
-        if: matrix.os == 'windows-latest'
-        run: mv electron/dist/minotaur-*.${{ matrix.extension }} ./minotaur2-setup-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}${{ env.PRE_RELEASE }}.${{ matrix.extension }}
-
       - name: Upload Executable File to release
         uses: softprops/action-gh-release@v1
         with:
-          files: minotaur2*.${{ matrix.extension }}
+          files: electron/dist/minotaur-*.${{ matrix.extension }}
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 

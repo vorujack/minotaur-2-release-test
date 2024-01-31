@@ -18,7 +18,7 @@
   },
   "mac": {
     "category": "your.app.category.type",
-    "target": "dmg",
+    "target": "pkg",
     "icon": "assets/appIcon.icns"
   },
   "linux": {

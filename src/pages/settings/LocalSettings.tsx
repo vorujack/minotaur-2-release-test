@@ -7,6 +7,7 @@ import ActionButton from './ActionButton';
 import { VisibilityOutlined } from '@mui/icons-material';
 import { getRoute, RouteMap } from '@/router/routerMap';
 import { StateWallet } from '@/store/reducer/wallet';
+import { WalletType } from '@/db/entities/Wallet';
 
 interface LocalSettingsPropsType {
   wallet: StateWallet;
@@ -28,7 +29,7 @@ const LocalSettings = (props: LocalSettingsPropsType) => {
           value={props.wallet.name}
           onChange={(newValue) => setName(newValue)}
         />
-        {props.wallet.xPub ? (
+        {props.wallet.xPub && props.wallet.type !== WalletType.MultiSig ? (
           <ActionButton
             label="Extended public key"
             helperText="Display extended public key for read-only wallet."

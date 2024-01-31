@@ -1,7 +1,7 @@
 name: 'Build and Sign Android'
 description: 'Build and Sign Android apk'
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
     - name: Setup Node.js
       uses: actions/setup-node@v4
@@ -11,7 +11,7 @@ runs:
     - name: Setup Python
       uses: actions/setup-python@v5
       with:
-        python-version: "3.9"
+        python-version: '3.9'
 
     - name: Extract version from tag
       uses: damienaicheh/extract-version-from-tag-action@v1.1.0

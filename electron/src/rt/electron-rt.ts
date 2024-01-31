@@ -11,6 +11,7 @@ const randomId = (length = 5) => randomBytes(length).toString('hex');
 const contextApi: {
   [plugin: string]: { [functionName: string]: () => Promise<unknown> };
 } = {};
+
 Object.keys(plugins).forEach((pluginKey) => {
   Object.keys(plugins[pluginKey])
     .filter((className) => className !== 'default')

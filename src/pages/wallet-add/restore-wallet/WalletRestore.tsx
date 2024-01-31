@@ -30,7 +30,8 @@ const WalletRestore = () => {
   const [values, setValues] = useState({
     name: '',
     network: MAIN_NET_LABEL,
-    mnemonic: '',
+    mnemonic:
+      'mutual cheap barely dog prepare this draft evidence rely rice bag hurt almost put drill',
     mnemonicPassphrase: '',
     password: '',
   });
@@ -88,7 +89,9 @@ const WalletRestore = () => {
               <Button onClick={handleNext} disabled={hasError}>
                 {step === STEPS_COUNTS ? (
                   <React.Fragment>
-                    {restoring ? <CircularProgress size={20} /> : null}
+                    {restoring ? (
+                      <CircularProgress size={20} className="color-white" />
+                    ) : null}
                     &nbsp;Restore
                   </React.Fragment>
                 ) : (

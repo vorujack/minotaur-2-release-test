@@ -1,8 +1,8 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'ml.minotaur.wallet2',
-  appName: 'minotaur 2',
+  appId: 'io.github.minotaur_ergo.minotaur',
+  appName: 'minotaur',
   webDir: 'dist',
   plugins: {
     CapacitorSQLite: {

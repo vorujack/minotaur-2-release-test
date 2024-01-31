@@ -8,7 +8,6 @@ env:
   CI: false
 
 jobs:
-
   android:
     runs-on: ubuntu-latest
     steps:
@@ -63,14 +62,13 @@ jobs:
           keyStorePassword: ${{ secrets.SIGNING_STORE_PASSWORD }}
           keyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
 
-
       - name: move apk to root directory
-        run: mv ${{steps.sign_app.outputs.signedReleaseFile}} minotaur-2-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}${{ env.PRE_RELEASE }}.apk
+        run: mv ${{steps.sign_app.outputs.signedReleaseFile}} minotaur-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}${{ env.PRE_RELEASE }}.apk
 
       - name: Upload Apk File to release
         uses: softprops/action-gh-release@v1
         with:
-          files: minotaur-2-*.apk
+          files: minotaur-*.apk
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
@@ -104,11 +102,10 @@ jobs:
         if: matrix.platform != 'android'
         working-directory: ./electron
         run: npm i; npm run build; npm run electron:pack; npm run electron:make
-      
+
       - name: Upload Executable File to release
         uses: softprops/action-gh-release@v1
         with:
           files: electron/dist/minotaur-*.${{ matrix.extension }}
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-

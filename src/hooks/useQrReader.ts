@@ -4,6 +4,7 @@ import { MutableRefObject, useEffect, useRef } from 'react';
 const useQrReader = (
   scannedCallback: (scanned: string) => unknown,
   errorCallback: (error: unknown) => unknown,
+  // selected: number = 0,
 ) => {
   const controller: MutableRefObject<IScannerControls | undefined> = useRef();
   useEffect(() => {
@@ -27,6 +28,7 @@ const useQrReader = (
       controller.current?.stop();
     };
   }, [scannedCallback, errorCallback]);
+  return 0;
 };
 
 export default useQrReader;

@@ -94,7 +94,9 @@ const WalletAddNew = () => {
               <Button onClick={handleNext} disabled={hasError}>
                 {step === STEPS_COUNTS ? (
                   <React.Fragment>
-                    {creating ? <CircularProgress size={20} /> : null}
+                    {creating ? (
+                      <CircularProgress size={20} className="color-white" />
+                    ) : null}
                     &nbsp;Create
                   </React.Fragment>
                 ) : step === MNEMONIC_STEP_NUM ? (

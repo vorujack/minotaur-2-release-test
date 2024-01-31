@@ -1,4 +1,4 @@
-package ml.minotaur.wallet2;
+package io.github.minotaur_ergo.minotaur;
 
 import com.getcapacitor.BridgeActivity;
 

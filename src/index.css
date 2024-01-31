@@ -19,3 +19,6 @@ body.barcode-scanner-active {
 .barcode-scanner-modal .appbar {
   background-color: #f8f8f8;
 }
+.color-white {
+  color: white !important;
+}

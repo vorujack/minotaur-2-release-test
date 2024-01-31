@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "ml.minotaur.wallet2"
+    namespace "io.github.minotaur_ergo.minotaur"
     compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "ml.minotaur.wallet2"
+        applicationId "io.github.minotaur_ergo.minotaur"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

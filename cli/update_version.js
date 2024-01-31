@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-import fs from 'fs'
+import fs from 'fs';
 import process from 'process';
 import { fileURLToPath } from 'url';
 
@@ -16,7 +16,7 @@ async function main() {
   }
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url))  {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   main()
     .then(() => process.exit(0))
     .catch((e) => {

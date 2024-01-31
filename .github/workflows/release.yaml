@@ -103,12 +103,12 @@ jobs:
         working-directory: ./electron
         run: npm i; npm run build; npm run electron:pack; npm run electron:make
 
-      - name: List dist directory content
-        run: ls electron/dist/
+      - name: Rename Release file
+        run: mv electron/dist/minotaur*.${{ matrix.extension }} minotaur-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}${{ env.PRE_RELEASE }}.${{ matrix.extension }}
 
       - name: Upload Executable File to release
         uses: softprops/action-gh-release@v1
         with:
-          files: electron/dist/minotaur-*.${{ matrix.extension }}
+          files: minotaur-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}${{ env.PRE_RELEASE }}.${{ matrix.extension }}
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}

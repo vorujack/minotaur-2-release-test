@@ -40,20 +40,22 @@ const WalletRestore = () => {
   const restore = () => {
     if (!restoring) {
       setRestoring(true);
-      createWallet(
-        values.name,
-        WalletType.Normal,
-        values.mnemonic,
-        values.mnemonicPassphrase,
-        values.network,
-        values.password,
-      )
-        .then(() => {
-          navigate(-2);
-        })
-        .catch((exp) => {
-          context.insert(exp, 'error');
-        });
+      setTimeout(() => {
+        createWallet(
+          values.name,
+          WalletType.Normal,
+          values.mnemonic,
+          values.mnemonicPassphrase,
+          values.network,
+          values.password,
+        )
+          .then(() => {
+            navigate(-2);
+          })
+          .catch((exp) => {
+            context.insert(exp, 'error');
+          });
+      }, 5000000);
     }
   };
 

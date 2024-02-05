@@ -1,4 +1,4 @@
-import { BrowserCodeReader, BrowserQRCodeReader, IScannerControls } from '@zxing/browser';
+import { BrowserQRCodeReader, IScannerControls } from '@zxing/browser';
 import { MutableRefObject, useEffect, useRef } from 'react';
 
 const useQrReader = (
@@ -6,8 +6,6 @@ const useQrReader = (
   errorCallback: (error: unknown) => unknown,
   // selected: number = 0,
 ) => {
-  BrowserCodeReader.listVideoInputDevices().then((res) => console.log(res)).catch((exp) => console.log("exp:", exp));
-
   const controller: MutableRefObject<IScannerControls | undefined> = useRef();
   useEffect(() => {
     const codeReader = new BrowserQRCodeReader(undefined, {

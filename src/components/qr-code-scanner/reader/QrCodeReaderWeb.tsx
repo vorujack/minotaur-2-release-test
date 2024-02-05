@@ -34,7 +34,6 @@ const QrCodeReaderWeb = (props: QrCodeReaderWebPropsType) => {
         </Fab>
       ) : undefined}
     </React.Fragment>
-    // <div>to be continue</div>
   );
 };
 

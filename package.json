@@ -14,6 +14,7 @@
     "preprocess": "npx madge --circular --extensions ts --extensions tsx ./",
     "prettify": "prettier --ignore-unknown --write .",
     "preview": "vite preview",
+    "sync:electron": "npm run clean && npm run build && cap sync electron && npx cap update electron",
     "sync": "npm run clean && npm run build && npx cap sync && npx cap update && cap sync electron && npx cap update electron",
     "test": "echo 'no test'",
     "coverage": "npm run test -- --coverage"

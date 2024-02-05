@@ -98,17 +98,22 @@ jobs:
         if: matrix.os != 'macos-latest'
         run: rm electron/assets/appIcon.icns
 
-      - name: Build Electron
-        if: matrix.platform != 'android'
+      - name: Build Electron NonMacOS
+        if: matrix.platform != 'android' && matrix.os != macos-latest
         working-directory: ./electron
         run: npm i; npm run build; npm run electron:pack; npm run electron:make
 
-      - name: Rename Release file
-        run: mv electron/dist/minotaur*.${{ matrix.extension }} minotaur-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}${{ env.PRE_RELEASE }}.${{ matrix.extension }}
+      - name: Build Electron MacOS
+        if: matrix.os == macos-latest
+        working-directory: ./electron
+        env:
+          CSC_LINK: ${{ secrets.CERTIFICATE }}
+          CSC_KEY_PASSWORD: ${{ secrets.CERT_PASSWORD }}
+        run: npm i; npm run build; npm run electron:pack; npm run electron:make
 
       - name: Upload Executable File to release
         uses: softprops/action-gh-release@v1
         with:
-          files: minotaur-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}${{ env.PRE_RELEASE }}.${{ matrix.extension }}
+          files: electron/dist/minotaur-*.${{ matrix.extension }}
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}

@@ -99,12 +99,12 @@ jobs:
         run: rm electron/assets/appIcon.icns
 
       - name: Build Electron NonMacOS
-        if: matrix.platform != 'android' && matrix.os != macos-latest
+        if: matrix.platform != 'android' && matrix.os != 'macos-latest'
         working-directory: ./electron
         run: npm i; npm run build; npm run electron:pack; npm run electron:make
 
       - name: Build Electron MacOS
-        if: matrix.os == macos-latest
+        if: matrix.os == 'macos-latest'
         working-directory: ./electron
         env:
           CSC_LINK: ${{ secrets.CERTIFICATE }}

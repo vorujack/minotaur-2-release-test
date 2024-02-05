@@ -101,7 +101,7 @@ jobs:
       - name: Build Electron NonMacOS
         if: matrix.platform != 'android' && matrix.os != 'macos-latest'
         working-directory: ./electron
-        run: npm i; npm run build; npm run electron:pack; npm run electron:make
+        run: npm i; npm run electron:make
 
       - name: Build Electron MacOS
         if: matrix.os == 'macos-latest'
@@ -109,7 +109,7 @@ jobs:
         env:
           CSC_LINK: ${{ secrets.CERTIFICATE }}
           CSC_KEY_PASSWORD: ${{ secrets.CERT_PASSWORD }}
-        run: npm i; npm run build; npm run electron:pack; npm run electron:make
+        run: npm i; npm run electron:make
 
       - name: Upload Executable File to release
         uses: softprops/action-gh-release@v1

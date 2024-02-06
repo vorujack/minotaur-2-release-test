@@ -30,8 +30,7 @@ const WalletRestore = () => {
   const [values, setValues] = useState({
     name: '',
     network: MAIN_NET_LABEL,
-    mnemonic:
-      'mutual cheap barely dog prepare this draft evidence rely rice bag hurt almost put drill',
+    mnemonic: '',
     mnemonicPassphrase: '',
     password: '',
   });

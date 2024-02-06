@@ -1,0 +1,26 @@
+name: 'Install Certificate'
+description: 'Decode Certificate, Install And Trust It'
+runs:
+  using: 'composite'
+  steps:
+    - name: Create P12 Certificate File
+      uses: timheuer/base64-to-file@v1.2
+      with:
+        fileName: 'Minotaur.p12'
+        fileDir: '.'
+        encodedString: ${{ secrets.CERT_P12 }}
+
+    - name: Create CRT Certificate File
+      uses: timheuer/base64-to-file@v1.2
+      with:
+        fileName: 'Minotaur.crt'
+        fileDir: '.'
+        encodedString: ${{ secrets.CERT_CRT }}
+
+    - name: Import P12
+      shell: bash
+      run: sudo security import Minotaur.p12 -k "$HOME/Library/Keychains/login.keychain" -P ${{ secrets.CERT_PASS }} -A
+
+    - name: Trust Installed Certificate
+      shell: bash
+      run: sudo security add-trusted-cert -d -r trustRoot -k "$HOME/Library/Keychains/login.keychain" Minotaur.crt

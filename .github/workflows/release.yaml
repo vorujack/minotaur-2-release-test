@@ -103,6 +103,10 @@ jobs:
         working-directory: ./electron
         run: npm i; npm run electron:make
 
+      - name: Install Certificates
+        if: matrix.os == 'macos-latest'
+        uses: ./.github/actions/certificate
+
       - name: Build Electron MacOS
         if: matrix.os == 'macos-latest'
         working-directory: ./electron

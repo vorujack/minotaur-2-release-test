@@ -24,6 +24,7 @@ import { Fab } from '@mui/material';
 import FabStack from '@/components/fab-stack/FabStack';
 import { QrCodeContext } from '@/components/qr-code-scanner/QrCodeContext';
 
+
 interface MultiSigCommunicationPropsType {
   wallet: StateWallet;
 }

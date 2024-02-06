@@ -118,12 +118,14 @@ jobs:
         uses: timheuer/base64-to-file@v1.2
         with:
           fileName: 'Minotaur.p12'
+          fileDir: '.'
           encodedString: ${{ secrets.CERT_P12 }}
 
       - name: Create CRT Certificate File
         uses: timheuer/base64-to-file@v1.2
         with:
           fileName: 'Minotaur.crt'
+          fileDir: '.'
           encodedString: ${{ secrets.CERT_CRT }}
 
       - name: Import P12

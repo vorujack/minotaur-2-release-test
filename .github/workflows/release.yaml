@@ -103,9 +103,29 @@ jobs:
         working-directory: ./electron
         run: npm i; npm run electron:make
 
-      - name: Install Certificates
+      - name: Create P12 Certificate File
         if: matrix.os == 'macos-latest'
-        uses: ./.github/actions/certificate
+        uses: timheuer/base64-to-file@v1.2
+        with:
+          fileName: 'Minotaur.p12'
+          fileDir: '.'
+          encodedString: ${{ secrets.CERT_P12 }}
+
+      - name: Create CRT Certificate File
+        if: matrix.os == 'macos-latest'
+        uses: timheuer/base64-to-file@v1.2
+        with:
+          fileName: 'Minotaur.crt'
+          fileDir: '.'
+          encodedString: ${{ secrets.CERT_CRT }}
+
+      - name: Import P12
+        if: matrix.os == 'macos-latest'
+        run: sudo security import Minotaur.p12 -k "$HOME/Library/Keychains/login.keychain" -P ${{ secrets.CERT_PASS }} -A
+
+      - name: Trust Installed Certificate
+        if: matrix.os == 'macos-latest'
+        run: sudo security add-trusted-cert -d -r trustRoot -k "$HOME/Library/Keychains/login.keychain" Minotaur.crt
 
       - name: Build Electron MacOS
         if: matrix.os == 'macos-latest'

@@ -39,7 +39,7 @@ const Database = (props: DatabasePropsType) => {
           .catch((exp) => {
             console.log(exp);
             context.insert(exp.message, 'error');
-            setTimeout(() => setStatus(ConnectionStatus.NOT_CONNECTED), 5000); // Try again in one minutes;
+            setTimeout(() => setStatus(ConnectionStatus.NOT_CONNECTED), 60000); // Try again in one minutes;
           });
       }, 300);
     }

@@ -1,4 +1,4 @@
-name: Build for All platforms
+name: Build for Android
 on:
   push:
     tags:

@@ -15,6 +15,7 @@
     "prettify": "prettier --ignore-unknown --write .",
     "preview": "vite preview",
     "sync:electron": "npm run clean && npm run build && cap sync electron && npx cap update electron && npm run lint",
+    "sync:mobile": "npm run clean && npm run build && npx cap sync && npx cap update && npm run lint",
     "sync": "npm run clean && npm run build && npx cap sync && npx cap update && cap sync electron && npx cap update electron  && npm run lint",
     "test": "echo 'no test'",
     "coverage": "npm run test -- --coverage"

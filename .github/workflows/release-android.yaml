@@ -39,7 +39,7 @@ jobs:
 
       - name: Build Minotaur JS app and update capacitor
         shell: bash
-        run: npm run sync
+        run: npm run sync:native
 
       - name: Setup Android build environment
         uses: android-actions/setup-android@v3

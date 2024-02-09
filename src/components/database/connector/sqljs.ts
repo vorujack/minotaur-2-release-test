@@ -16,11 +16,9 @@ export const loadDatabase = async (url: string) => {
   );
 };
 const connectSqlJs = async () => {
-  // await loadDatabase('http://127.0.0.1:8000/db.sqlite3');
   window.SQL = await initSqlJs({
     locateFile: (file: string) => `/${file}`,
   });
-  // const db = new window.SQL.Database(new Uint8Array(data));
   const dataSource = new DataSource({
     type: 'sqljs',
     autoSave: true,

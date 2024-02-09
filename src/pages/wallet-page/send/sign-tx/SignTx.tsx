@@ -26,31 +26,33 @@ const SignTx = (props: SignTxPropsType) => {
     generatorContext.setReady(true);
   });
   if (txDataContext.tx) {
-    <TxSignStatusDisplay status={txSignContext.status}>
-      <React.Fragment>
-        <TxSignValues
-          tx={txDataContext.tx}
-          boxes={txDataContext.boxes}
-          wallet={props.wallet}
-        />
-        {txSignContext.signed ? (
-          <React.Fragment>
-            <Typography>
-              Please scan this code on your hot wallet to submit transaction
-            </Typography>
-            <DisplayQRCode
-              value={txSignContext.signed}
-              type={QrCodeTypeEnum.ColdSignTransaction}
-            />
-          </React.Fragment>
-        ) : (
-          <SigningSwitch
+    return (
+      <TxSignStatusDisplay status={txSignContext.status}>
+        <React.Fragment>
+          <TxSignValues
+            tx={txDataContext.tx}
+            boxes={txDataContext.boxes}
             wallet={props.wallet}
-            setHasError={props.setHasError}
           />
-        )}
-      </React.Fragment>
-    </TxSignStatusDisplay>;
+          {txSignContext.signed ? (
+            <React.Fragment>
+              <Typography>
+                Please scan this code on your hot wallet to submit transaction
+              </Typography>
+              <DisplayQRCode
+                value={txSignContext.signed}
+                type={QrCodeTypeEnum.ColdSignTransaction}
+              />
+            </React.Fragment>
+          ) : (
+            <SigningSwitch
+              wallet={props.wallet}
+              setHasError={props.setHasError}
+            />
+          )}
+        </React.Fragment>
+      </TxSignStatusDisplay>
+    );
   }
   return props.hideLoading === true ? undefined : (
     <Box

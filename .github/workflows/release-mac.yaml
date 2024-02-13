@@ -62,10 +62,11 @@ jobs:
 
       - name: Build Electron
         working-directory: ./electron
-        env:
-          CSC_LINK: ${{ secrets.CERT_P12 }}
-          CSC_KEY_PASSWORD: ${{ secrets.CERT_PASS }}
-        run: npm i; npm run electron:make
+        run: npm i; npm run electron:pack
+
+      - name: Sign And Create DMG
+        working-directory: "./electron/dist"
+        run: codesign -s Minotaur mac-arm64/minotaur.app; hdiutil create "./minotaur${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}${{ env.PRE_RELEASE }}-arm64.dmg" -ov -volname "Minotaur" -fs HFS+ -srcfolder "./mac-arm64"
 
       - name: Upload Executable File to release
         uses: softprops/action-gh-release@v1

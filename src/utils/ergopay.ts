@@ -8,8 +8,13 @@ import { createEmptyArray } from './functions';
 import getChain from './networks';
 
 const getUrl = (url: string, address: string) => {
+  if (url.startsWith('ergopay://localhost')) {
+    return url
+      .replace('ergopay://', 'http://')
+      .replace(ADDRESS_PLACE_HOLDER, address);
+  }
   return url
-    .replace('ergopay://', 'http://')
+    .replace('ergopay://', 'https://')
     .replace(ADDRESS_PLACE_HOLDER, address);
 };
 

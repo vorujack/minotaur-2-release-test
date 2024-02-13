@@ -12,8 +12,17 @@ import TxDataContextHandler from './TxDataContextHandler';
 import TxSignContext, { StatusEnum } from './TxSignContext';
 import { RouteMap, getRoute } from '../../../router/routerMap';
 import { QrCodeContext } from '@/components/qr-code-scanner/QrCodeContext';
-import TxSubmitContextHandler from './TxSubmitContextHandler';
 import TxSubmitContext from './TxSubmitContext';
+import TxSubmitContextHandler from './TxSubmitContextHandler';
+
+interface TxSignContextHandlerInternalPropsType {
+  wallet: StateWallet;
+  children: React.ReactNode;
+  close: () => unknown;
+  denySubmit?: boolean;
+  status: StatusEnum;
+  setStatus: (newStatus: StatusEnum) => unknown;
+}
 
 interface TxSignContextHandlerPropsType {
   wallet: StateWallet;
@@ -22,7 +31,9 @@ interface TxSignContextHandlerPropsType {
   denySubmit?: boolean;
 }
 
-const TxSignContextHandler = (props: TxSignContextHandlerPropsType) => {
+const TxSignContextHandlerInternal = (
+  props: TxSignContextHandlerInternalPropsType,
+) => {
   const navigate = useNavigate();
   const [tx, setTx] = useState<wasm.UnsignedTransaction | undefined>();
   const [reduced, setReducedTx] = useState<
@@ -31,7 +42,6 @@ const TxSignContextHandler = (props: TxSignContextHandlerPropsType) => {
   const [boxes, setBoxes] = useState<Array<wasm.ErgoBox>>([]);
   const [dataBoxes, setDataBoxes] = useState<Array<wasm.ErgoBox>>([]);
   const [password, setPassword] = useState('');
-  const [status, setStatus] = useState<StatusEnum>(StatusEnum.WAITING);
   const [signedStr, setSignedStr] = useState('');
   const qrCodeContext = useContext(QrCodeContext);
   const submitContext = useContext(TxSubmitContext);
@@ -52,18 +62,6 @@ const TxSignContextHandler = (props: TxSignContextHandlerPropsType) => {
       reduced?.unsigned_tx().id().to_str()
     ) {
       setReducedTx(reducedTx);
-    }
-  };
-
-  const close = () => {
-    if (status === StatusEnum.SENT) {
-      if (props.close) {
-        props.close();
-      } else {
-        navigate(-1);
-      }
-    } else {
-      setStatus(StatusEnum.WAITING);
     }
   };
 
@@ -89,7 +87,7 @@ const TxSignContextHandler = (props: TxSignContextHandlerPropsType) => {
 
   const handleNormalTx = () => {
     if (tx) {
-      setStatus(StatusEnum.SIGNING);
+      props.setStatus(StatusEnum.SIGNING);
       return signNormalWalletTx(
         props.wallet,
         password,
@@ -101,7 +99,7 @@ const TxSignContextHandler = (props: TxSignContextHandlerPropsType) => {
   };
 
   const handle = async () => {
-    if (tx && status === StatusEnum.WAITING) {
+    if (tx && props.status === StatusEnum.WAITING) {
       switch (props.wallet.type) {
         case WalletType.Normal:
           if (
@@ -135,6 +133,7 @@ const TxSignContextHandler = (props: TxSignContextHandlerPropsType) => {
       }
     }
   };
+
   return (
     <TxSignContext.Provider
       value={{
@@ -142,7 +141,7 @@ const TxSignContextHandler = (props: TxSignContextHandlerPropsType) => {
         networkType: props.wallet.networkType,
         password,
         handle,
-        status,
+        status: props.status,
         setPassword,
         setTx: setTransactionDetail,
         signed: signedStr,
@@ -155,16 +154,45 @@ const TxSignContextHandler = (props: TxSignContextHandlerPropsType) => {
         reduced={reduced}
         tx={tx}
       >
-        <TxSubmitContextHandler
-          wallet={props.wallet}
-          status={status}
-          setStatus={setStatus}
-          close={close}
-        >
-          {props.children}
-        </TxSubmitContextHandler>
+        {props.children}
       </TxDataContextHandler>
     </TxSignContext.Provider>
+  );
+};
+
+const TxSignContextHandler = (props: TxSignContextHandlerPropsType) => {
+  const navigate = useNavigate();
+  const [status, setStatus] = useState<StatusEnum>(StatusEnum.WAITING);
+
+  const close = () => {
+    if (status === StatusEnum.SENT) {
+      if (props.close) {
+        props.close();
+      } else {
+        navigate(-1);
+      }
+    } else {
+      setStatus(StatusEnum.WAITING);
+    }
+  };
+
+  return (
+    <TxSubmitContextHandler
+      wallet={props.wallet}
+      status={status}
+      setStatus={setStatus}
+      close={close}
+    >
+      <TxSignContextHandlerInternal
+        close={close}
+        setStatus={setStatus}
+        status={status}
+        wallet={props.wallet}
+        denySubmit={props.denySubmit}
+      >
+        {props.children}
+      </TxSignContextHandlerInternal>
+    </TxSubmitContextHandler>
   );
 };
 

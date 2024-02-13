@@ -24,7 +24,7 @@ const getErgoPaySeverity = (severity?: ErgoPaySeverityEnum) => {
     case ErgoPaySeverityEnum.Warn:
       return 'warn';
   }
-  return '';
+  return 'default';
 };
 
 const useMessage = (

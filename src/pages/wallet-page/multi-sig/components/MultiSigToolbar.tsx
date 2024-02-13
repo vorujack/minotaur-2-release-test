@@ -13,6 +13,7 @@ import * as wasm from 'ergo-lib-wasm-browser';
 import { updateMultiSigRow } from '@/action/multi-sig/store';
 import { QrCodeContext } from '@/components/qr-code-scanner/QrCodeContext';
 import TxSubmitContext from '@/components/sign/context/TxSubmitContext';
+import { QrCodeTypeEnum } from '@/types/qrcode';
 
 const MultiSigToolbar = () => {
   const context = useContext(MultiSigContext);
@@ -126,14 +127,23 @@ const MultiSigToolbar = () => {
   };
 
   const pasteAction = async () => {
-    const clipBoardContent = await readClipBoard();
-    processNewData(clipBoardContent);
+    try {
+      const clipBoardContent = await readClipBoard();
+      const contentJson = JSON.parse(clipBoardContent);
+      if (QrCodeTypeEnum.MultiSigRequest in contentJson) {
+        await processNewData(contentJson[QrCodeTypeEnum.MultiSigRequest]);
+      } else {
+        await processNewData(clipBoardContent);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const act = async () => {
     switch (multiSigData.state) {
       case MultiSigStateEnum.SIGNING:
-        return await signAction();
+        return signAction();
       case MultiSigStateEnum.COMMITMENT:
         return await commitAction();
       case MultiSigStateEnum.COMPLETED:
@@ -158,10 +168,21 @@ const MultiSigToolbar = () => {
         return !multiSigData.myAction.committed;
     }
   };
+
+  const needModeData = () => {
+    switch (multiSigData.state) {
+      case MultiSigStateEnum.COMMITMENT:
+        return true;
+      case MultiSigStateEnum.SIGNING:
+        return !multiSigData.myAction.signed;
+      case MultiSigStateEnum.COMPLETED:
+        return false;
+    }
+  };
+
   const passwordInvalid =
     multiSigData.related !== undefined &&
     !validatePassword(multiSigData.related.seed, context.password);
-
   return (
     <React.Fragment>
       <Grid container spacing={2}>
@@ -183,7 +204,7 @@ const MultiSigToolbar = () => {
             </Button>
           </Grid>
         ) : null}
-        {multiSigData.state === MultiSigStateEnum.COMPLETED ? null : (
+        {needModeData() ? (
           <React.Fragment>
             <Grid item xs={6}>
               <Button
@@ -204,7 +225,7 @@ const MultiSigToolbar = () => {
               </Button>
             </Grid>
           </React.Fragment>
-        )}
+        ) : null}
       </Grid>
     </React.Fragment>
   );

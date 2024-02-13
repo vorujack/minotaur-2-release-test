@@ -1,66 +1,28 @@
 import { Box, IconButton, Stack, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { useContext, useEffect, useState } from 'react';
-import { BoxContent } from '../../../types/sign-modal';
-import {
-  boxesToContent,
-  createEmptyArrayWithIndex,
-} from '../../../utils/functions';
+import { useContext } from 'react';
 import { TxDataContext } from '../context/TxDataContext';
 import BoxItem from './BoxItem';
 import Drawer from '@mui/material/Drawer';
+import useTxBoxes from '@/hooks/useTxBoxes';
+import * as wasm from 'ergo-lib-wasm-browser';
+import { StateWallet } from '@/store/reducer/wallet';
 
 interface TransactionBoxesPropsType {
   open: boolean;
   handleClose: () => void;
+  signed?: wasm.Transaction;
+  boxes?: Array<wasm.ErgoBox>;
+  wallet?: StateWallet;
 }
 
 const TransactionBoxes = (props: TransactionBoxesPropsType) => {
-  const [txId, setTxId] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [inputBoxes, setInputBoxes] = useState<Array<BoxContent>>([]);
-  const [outputBoxes, setOutputBoxes] = useState<Array<BoxContent>>([]);
-  const [walletId, setWalletId] = useState(-1);
   const context = useContext(TxDataContext);
-  useEffect(() => {
-    if (context.tx && !loading) {
-      const unsigned = context.tx;
-      if (unsigned.id().to_str() !== txId || walletId !== context.wallet.id) {
-        setLoading(true);
-        const processingWalletId = context.wallet.id;
-        const inputsWasm = unsigned.inputs();
-        const inputs = createEmptyArrayWithIndex(inputsWasm.len()).map(
-          (index) => {
-            const input = inputsWasm.get(index);
-            const box = context.boxes.filter(
-              (item) => item.box_id().to_str() === input.box_id().to_str(),
-            );
-            if (box.length !== 0) {
-              return box[0];
-            }
-            return box[index];
-          },
-        );
-        setInputBoxes(boxesToContent(context.networkType, inputs));
-        const outputCandidates = unsigned.output_candidates();
-        const outputs = createEmptyArrayWithIndex(outputCandidates.len()).map(
-          (index) => outputCandidates.get(index),
-        );
-        setOutputBoxes(boxesToContent(context.networkType, outputs));
-        setTxId(unsigned.id().to_str());
-        setWalletId(processingWalletId);
-        setLoading(false);
-      }
-    }
-  }, [
-    context.tx,
-    context.networkType,
-    context.boxes,
-    loading,
-    txId,
-    context.wallet,
-    walletId,
-  ]);
+  const { inputBoxes, outputBoxes } = useTxBoxes(
+    props.wallet ?? context.wallet,
+    props.boxes ?? context.boxes,
+    props.signed ?? context.tx,
+  );
   return (
     <Drawer
       anchor="bottom"

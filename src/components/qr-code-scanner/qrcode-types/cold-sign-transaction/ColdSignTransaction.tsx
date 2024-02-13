@@ -20,6 +20,7 @@ import TransactionBoxes from '@/components/sign/transaction-boxes/TransactionBox
 import useBoxes from '@/hooks/useBoxes';
 import { StateWallet } from '@/store/reducer/wallet';
 import TxSubmitContext from '@/components/sign/context/TxSubmitContext';
+import { SelectableWalletContext } from '@/components/sign/context/SelectableWalletContext';
 
 interface ColdSignTransactionPropsType {
   scanned: string;
@@ -35,7 +36,17 @@ const ColdSignTransaction = (props: ColdSignTransactionPropsType) => {
   const [stored, setStored] = useState('');
   const boxes = useBoxes(tx, wallet);
   const context = useContext(TxSubmitContext);
+  const walletContext = useContext(SelectableWalletContext);
   const usedWallet = boxes.wallets.length === 1 ? boxes.wallets[0] : wallet;
+  useEffect(() => {
+    if (
+      usedWallet &&
+      walletContext.wallet &&
+      walletContext.wallet.id !== usedWallet.id
+    ) {
+      walletContext.setWallet(usedWallet);
+    }
+  });
 
   useEffect(() => {
     if (!loading) {
@@ -94,7 +105,9 @@ const ColdSignTransaction = (props: ColdSignTransactionPropsType) => {
     >
       {wallet && boxes.wallets.length > 1 ? (
         <React.Fragment>
-          <Typography>Please Select One Wallet To Connect ErgoPay:</Typography>
+          <Typography>
+            Please Select One Wallet To Extract Transaction:
+          </Typography>
           <FormControl sx={{ mt: 1 }}>
             <InputLabel id="select-wallet-label">Wallet</InputLabel>
             <Select
@@ -131,6 +144,9 @@ const ColdSignTransaction = (props: ColdSignTransactionPropsType) => {
           <TransactionBoxes
             open={displayBoxes}
             handleClose={() => setDisplayBoxes(false)}
+            boxes={boxes.boxes}
+            wallet={usedWallet}
+            signed={tx}
           />
         </React.Fragment>
       ) : (

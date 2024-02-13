@@ -23,6 +23,7 @@ import BackButtonRouter from '@/components/back-button/BackButtonRouter';
 import { Fab } from '@mui/material';
 import FabStack from '@/components/fab-stack/FabStack';
 import { QrCodeContext } from '@/components/qr-code-scanner/QrCodeContext';
+import { QrCodeTypeEnum } from '@/types/qrcode';
 
 interface MultiSigCommunicationPropsType {
   wallet: StateWallet;
@@ -108,7 +109,12 @@ const MultiSigCommunication = (props: MultiSigCommunicationPropsType) => {
     setReading(true);
     try {
       const clipBoardContent = await readClipBoard();
-      await processNewData(clipBoardContent);
+      const contentJson = JSON.parse(clipBoardContent);
+      if (QrCodeTypeEnum.MultiSigRequest in contentJson) {
+        await processNewData(contentJson[QrCodeTypeEnum.MultiSigRequest]);
+      } else {
+        await processNewData(clipBoardContent);
+      }
     } catch (e: unknown) {
       message.insert(`${(e as { message: unknown }).message}`, 'error');
     }

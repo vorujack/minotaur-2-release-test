@@ -99,7 +99,10 @@ const ColdSigningRequest = (props: ColdSigningRequestPropsType) => {
         ) : undefined
       }
       toolbar={
-        context.tx && walletContext.wallet && error === '' ? (
+        context.tx &&
+        walletContext.wallet &&
+        error === '' &&
+        txSignContext.signed === '' ? (
           <Button disabled={hasError} onClick={() => txSignContext.handle()}>
             {getSignButtonLabel(walletContext.wallet.type)}
           </Button>

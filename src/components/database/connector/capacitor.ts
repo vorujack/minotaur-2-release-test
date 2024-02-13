@@ -9,7 +9,7 @@ const connectCapacitor = async () => {
   try {
     dataSource = new DataSource({
       type: 'capacitor',
-      database: 'minotaur2',
+      database: 'minotaur',
       driver: sqliteConnection,
       logging: false,
       synchronize: false,

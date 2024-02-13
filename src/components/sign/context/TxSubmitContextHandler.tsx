@@ -20,7 +20,6 @@ const TxSubmitContextHandler = (props: TxSubmitContextHandlerPropsType) => {
   const [internalStatus, internalSetStatus] = useState<StatusEnum>(
     StatusEnum.WAITING,
   );
-
   const usedStatus = props.status ?? internalStatus;
   const usedSetStatus = props.setStatus ?? internalSetStatus;
 
@@ -42,6 +41,13 @@ const TxSubmitContextHandler = (props: TxSubmitContextHandlerPropsType) => {
         }
         usedSetStatus(StatusEnum.ERROR);
       });
+  };
+
+  const close = () => {
+    if (props.close) {
+      props.close();
+    }
+    usedSetStatus(StatusEnum.WAITING);
   };
 
   return (

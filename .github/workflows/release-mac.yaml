@@ -40,6 +40,10 @@ jobs:
         shell: bash
         run: npm run sync:electron
 
+      - name: Build Electron
+        working-directory: ./electron
+        run: npm i; npm run electron:pack
+
       - name: Create P12 Certificate File
         uses: timheuer/base64-to-file@v1.2
         with:
@@ -59,10 +63,6 @@ jobs:
 
       - name: Trust Installed Certificate
         run: sudo security add-trusted-cert -d -r trustRoot -k "$HOME/Library/Keychains/login.keychain" Minotaur.crt
-
-      - name: Build Electron
-        working-directory: ./electron
-        run: npm i; npm run electron:pack
 
       - name: Sign And Create DMG
         working-directory: "./electron/dist"

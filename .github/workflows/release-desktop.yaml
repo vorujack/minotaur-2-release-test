@@ -54,7 +54,7 @@ jobs:
         run: npm run sync:electron
 
       - name: Remove icns from assets
-        if: matrix.os == macos-latest
+        if: matrix.os != 'macos-latest'
         run: rm electron/assets/appIcon.icns
 
       - name: Build Electron

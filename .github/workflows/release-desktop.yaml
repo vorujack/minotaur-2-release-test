@@ -12,7 +12,7 @@ jobs:
   desktop:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
         include:
           - os: ubuntu-latest
             platform: linux
@@ -20,6 +20,9 @@ jobs:
           - os: windows-latest
             platform: Windows
             extension: exe
+          - os: macos-latest
+            platform: MacOS
+            extension: dmg
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out Git repository

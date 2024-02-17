@@ -65,6 +65,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: electron/dist/minotaur*.${{ matrix.extension }}
-          prerelease: '${{ env.PRE_RELEASE }}' != ''
+          prerelease: `${{ env.PRE_RELEASE }}` != ''
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
